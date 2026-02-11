@@ -116,7 +116,9 @@ Specialized agent for executing a single task from a plan. Receives the full tas
 ## Skill
 
 ### prompt-decomposition
-Best practices for breaking down complex prompts into atomic tasks:
+This skill **auto-activates** when your prompt contains planning-related keywords (e.g. "pianifica", "plan this", "break down", "scomponi", "structured approach", "step by step plan"). When triggered, it automatically runs the full planning workflow — no need to invoke `/planning-workflow:plan` explicitly.
+
+It also provides best practices applied during decomposition:
 - **Atomicity**: each task does exactly one thing
 - **Independence**: maximize tasks that can run in parallel
 - **Clarity**: unambiguous descriptions with specific file paths and expected outcomes
@@ -138,7 +140,12 @@ Best practices for breaking down complex prompts into atomic tasks:
 # Create a plan and optionally execute it immediately
 /planning-workflow:plan "Refactor the authentication system to use JWT tokens, add refresh token support, update all API endpoints, and write integration tests"
 
-# Or execute a previously saved plan
+# Or just ask naturally — the skill auto-activates on planning keywords:
+# "pianifica il refactoring del sistema di autenticazione"
+# "plan the migration to JWT tokens"
+# "break down this feature into tasks"
+
+# Execute a previously saved plan
 /planning-workflow:task-exec .plans/2025-01-15-refactor-auth/
 ```
 

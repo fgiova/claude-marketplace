@@ -1,12 +1,43 @@
 ---
 name: prompt-decomposition
-description: Best practices for decomposing complex prompts into atomic, executable tasks with dependency mapping
+description: |
+  Activate when the user asks to plan, organize, decompose, break down, or structure a complex task.
+  Trigger keywords: pianifica, pianificare, piano, plan, planning, plan this, make a plan,
+  crea un piano, scomponi, break down, decompose, organize tasks, task plan, step by step plan,
+  structured approach, multi-step, fasi, phases.
 version: 1.0.0
 ---
 
 # Prompt Decomposition
 
-Guidelines for breaking down complex prompts into well-structured, executable task plans.
+**IMPORTANT**: When this skill activates because the user is asking to plan or decompose a task,
+you MUST follow the full planning workflow procedure described below. Do NOT just give advice —
+actually execute the workflow.
+
+## Activation Behavior
+
+When the user asks to plan something (e.g. "pianifica questo", "make a plan for...", "break this down into tasks"),
+follow the **exact same procedure** as the `/planning-workflow:plan` command:
+
+1. **Bootstrap `.plans/`**: check `.gitignore` for `.plans/`, add if missing, create directory
+2. **Analyze the prompt**: understand full scope, read referenced files if any
+3. **Identify atomic tasks**: break into smallest independently executable units
+4. **Map dependencies**: determine task ordering and parallel groups
+5. **Propose the plan**: present structured plan with phases and tasks
+6. **Ask for confirmation**: let the user approve, modify, or iterate
+7. **Save the plan**: write `plan.md` index + individual task files in `.plans/<timestamp>-<slug>/tasks/`
+8. **Ask to execute**: offer immediate execution or defer to `/planning-workflow:task-exec`
+9. **If executing**: run tasks in parallel phases via Task tool, update plan.md after every task
+10. **Final summary**: present results, ask whether to delete or keep planning files
+
+Refer to the `/planning-workflow:plan` command for the full specification of each step,
+including file formats, frontmatter schemas, and execution rules.
+
+---
+
+## Guidelines
+
+Below are the best practices applied during task decomposition.
 
 ## Decomposition Principles
 

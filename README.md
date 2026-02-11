@@ -13,7 +13,7 @@ This marketplace distributes high-quality Claude Code plugins that extend Claude
 
 ## Available Plugins
 
-- **planning-workflow** - Plan and execute complex prompts with parallel task decomposition
+- **planning-workflow** - Plan and execute complex prompts with parallel task decomposition. Auto-activates when you ask to plan, decompose, or structure a task.
 
 ## Getting Started
 
