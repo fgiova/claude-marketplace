@@ -1,0 +1,12 @@
+{
+  "name": "platformatic-runtime",
+  "description": "Platformatic Runtime expertise: multi-service orchestration, watt.json configuration, monorepo structure, and testing strategy",
+  "version": "0.1.0",
+  "author": {
+    "name": "Francesco Giovannini",
+    "email": "fgiova@fgiova.com"
+  },
+  "repository": "https://github.com/fgiova/claude-marketplace",
+  "license": "MIT",
+  "keywords": ["platformatic", "runtime", "watt", "nodejs", "typescript", "fastify", "monorepo", "microservices", "testcontainers", "prisma"]
+}

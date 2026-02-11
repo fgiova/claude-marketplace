@@ -28,6 +28,17 @@
       },
       "source": "./plugins/fastify-expert",
       "category": "development"
+    },
+    {
+      "name": "platformatic-runtime",
+      "description": "Platformatic Runtime expertise: multi-service orchestration, watt.json configuration, monorepo structure, and testing strategy",
+      "version": "0.1.0",
+      "author": {
+        "name": "Francesco Giovannini",
+        "email": "fgiova@fgiova.com"
+      },
+      "source": "./plugins/platformatic-runtime",
+      "category": "development"
     }
   ]
 }
