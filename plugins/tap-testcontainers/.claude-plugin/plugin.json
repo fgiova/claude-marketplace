@@ -1,0 +1,12 @@
+{
+  "name": "tap-testcontainers",
+  "description": "Node-tap and Testcontainers integration expertise: container-based testing, test lifecycle, service orchestration, and best practices for Node.js",
+  "version": "0.1.0",
+  "author": {
+    "name": "Francesco Giovannini",
+    "email": "fgiova@fgiova.com"
+  },
+  "repository": "https://github.com/fgiova/claude-marketplace",
+  "license": "MIT",
+  "keywords": ["node-tap", "tap", "testcontainers", "testing", "containers", "docker", "nodejs", "integration-testing"]
+}

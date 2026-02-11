@@ -16,6 +16,7 @@ This marketplace distributes high-quality Claude Code plugins that extend Claude
 - **planning-workflow** - Plan and execute complex prompts with parallel task decomposition. Auto-activates when you ask to plan, decompose, or structure a task.
 - **fastify-expert** - Senior Fastify developer expertise: type-safe APIs, plugin architecture, schema validation, and production patterns. Auto-activates on Fastify-related prompts.
 - **platformatic-runtime** - Platformatic Runtime expertise: multi-service orchestration, watt.json configuration, monorepo structure, and testing strategy. Auto-activates on Platformatic-related prompts.
+- **tap-testcontainers** - Node-tap and Testcontainers integration expertise: container-based testing, test lifecycle, service orchestration, and best practices for Node.js. Auto-activates on node-tap + Testcontainers-related prompts.
 
 ## Getting Started
 
