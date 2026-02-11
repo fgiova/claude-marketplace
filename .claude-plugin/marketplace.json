@@ -17,6 +17,17 @@
       },
       "source": "./plugins/planning-workflow",
       "category": "workflow"
+    },
+    {
+      "name": "fastify-expert",
+      "description": "Senior Fastify developer expertise: type-safe APIs, plugin architecture, schema validation, and production patterns",
+      "version": "0.1.0",
+      "author": {
+        "name": "Francesco Giovannini",
+        "email": "fgiova@fgiova.com"
+      },
+      "source": "./plugins/fastify-expert",
+      "category": "development"
     }
   ]
 }

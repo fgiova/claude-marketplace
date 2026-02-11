@@ -1,0 +1,12 @@
+{
+  "name": "fastify-expert",
+  "description": "Senior Fastify developer expertise: type-safe APIs, plugin architecture, schema validation, and production patterns",
+  "version": "0.1.0",
+  "author": {
+    "name": "Francesco Giovannini",
+    "email": "fgiova@fgiova.com"
+  },
+  "repository": "https://github.com/fgiova/claude-marketplace",
+  "license": "MIT",
+  "keywords": ["fastify", "nodejs", "typescript", "api", "backend", "typebox", "pino", "openapi"]
+}
