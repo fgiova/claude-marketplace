@@ -423,3 +423,11 @@ CMD [ "node", "./server.js" ]
 - Document APIs with OpenAPI/Swagger integration
 
 Always prioritize performance, type safety, and maintainability while leveraging Fastify's strengths in speed and developer experience.
+
+## Common Pitfalls
+
+- **Import shadowing in route handlers**: If you import a function (e.g. `request` from `undici`) and the route handler parameter has the same name, the handler parameter wins. Rename the import (e.g. `import { request as undiciRequest }`)
+- **Missing `declare module "fastify"`**: When decorating the instance (e.g. `app.decorate("config", config)`), always augment the `FastifyInstance` interface — otherwise TypeScript won't see the property
+- **Forgetting `fp()` wrapper**: Plugins that should share their decorations across the app must be wrapped with `fastify-plugin` (`fp()`). Without it, decorators are encapsulated and invisible to sibling routes/plugins
+- **Calling `done()` in async plugin functions**: If your plugin registration function is `async`, do NOT call `done()` — Fastify handles the callback automatically. Mixing both causes double-callback errors
+- **Schema response keys as strings**: Response schema keys must be numeric status codes (`200`, `404`), not strings. TypeBox schemas go directly as values — no `{ type: "object" }` wrapper needed

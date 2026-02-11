@@ -124,7 +124,49 @@ export {
 }
 ```
 
-### 4. Create the `before.js` executor
+### 4. Create additional runners as needed
+
+Example for MySQL — `test/scripts/runners/mysql.js`:
+```javascript
+import { GenericContainer, Wait } from "testcontainers";
+
+const startContainer = async () => {
+    const mysql = await new GenericContainer("mysql:8")
+        .withExposedPorts(3306)
+        .withLabels({
+            "org.testcontainers.reaper-session-id": process.env.REAPER_SESSION_ID
+        })
+        .withEnvironment({
+            MYSQL_ROOT_PASSWORD: "test",
+            MYSQL_DATABASE: "testdb",
+        })
+        .withWaitStrategy(Wait.forLogMessage("ready for connections"))
+        .start();
+    const port = mysql.getMappedPort(3306);
+    const host = mysql.getHost();
+    return {
+        container: mysql,
+        port,
+        host
+    };
+}
+
+/**
+ * Run migrations or seed data after container start.
+ */
+const bootstrap = async (host, port) => {
+    // e.g. run Prisma migrations against mysql://root:test@${host}:${port}/testdb
+};
+
+export {
+    startContainer,
+    bootstrap
+}
+```
+
+The pattern is the same for any service: export `startContainer()` and `bootstrap()`, then wire them in `before.js`.
+
+### 5. Create the `before.js` executor
 
 `test/scripts/executors/before.js` — starts the Ryuk reaper, launches containers, and writes `test-env.json`:
 ```javascript
@@ -177,7 +219,7 @@ const before = async () => {
 export default before();
 ```
 
-### 5. Create the `teardown.js` executor
+### 6. Create the `teardown.js` executor
 
 `test/scripts/executors/teardown.js` — stops containers and cleans up `test-env.json`:
 ```javascript
@@ -209,7 +251,7 @@ const teardown = async () => {
 export default teardown();
 ```
 
-### 6. Create `localtest.ts`
+### 7. Create `localtest.ts`
 
 `test/helpers/localtest.ts` — imported by every test file to load environment and connect to the reaper:
 ```typescript
@@ -267,7 +309,7 @@ const defaultExport = () => {
 defaultExport();
 ```
 
-### 7. Create `.env.test`
+### 8. Create `.env.test`
 
 Add a `.env.test` file with static test configuration (values that don't depend on containers):
 ```env
@@ -276,7 +318,7 @@ APP_ENV=test
 # Dynamic values (REDIS_URL, etc.) come from test-env.json
 ```
 
-### 8. Use in tests
+### 9. Use in tests
 
 Import the `localtest.ts` helper as the first import in every test file:
 ```typescript
@@ -316,3 +358,11 @@ SKIP_TEST_REDIS_SETUP=true pnpm test
 ```
 
 **Note**: When skipping containers, ensure the required services are either not needed by your tests or are already running locally.
+
+## Common Pitfalls
+
+- **Variable scope in `before.js`**: When conditionally starting containers (`if (!process.env.SKIP_TEST_...)`), keep the `bootstrap()` call inside the same `if` block — the host/port variables are scoped there
+- **Reaper label mismatch**: Every container must include `"org.testcontainers.reaper-session-id": process.env.REAPER_SESSION_ID` in its labels, otherwise the teardown cannot find and stop it
+- **`test-env.json` left behind**: If a test run crashes before teardown, `test-env.json` stays on disk. Add it to `.gitignore` and handle the case in your CI pipeline
+- **Tap process isolation**: `before.js`, test files, and `teardown.js` run as separate processes — env vars set in `before.js` do NOT propagate to tests. Always pass data through `test-env.json`
+- **Timeout too low**: Container startup can be slow on first pull. Use `tap --timeout=90` or higher, and `--timeout=0` for debug sessions
