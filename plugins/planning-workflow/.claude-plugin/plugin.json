@@ -1,0 +1,12 @@
+{
+  "name": "planning-workflow",
+  "description": "Plan and execute complex prompts by decomposing them into parallel tasks",
+  "version": "1.0.0",
+  "author": {
+    "name": "Francesco Giovannini",
+    "email": "fgiova@fgiova.com"
+  },
+  "repository": "https://github.com/fgiova/claude-marketplace",
+  "license": "MIT",
+  "keywords": ["planning", "workflow", "task-execution", "decomposition", "parallel"]
+}

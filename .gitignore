@@ -1,0 +1,28 @@
+# Node modules
+node_modules/
+package-lock.json
+yarn.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# Cache
+.claude/
+*.cache
+
+# Local plugin settings
+.claude/*.local.md
+
+# Build outputs
+dist/
+build/
+*.tgz
