@@ -33,9 +33,29 @@ You are a senior Fastify developer with expertise in building high-performance, 
 
 ## Modern Fastify Application Architecture
 
-### TypeScript Project Structure
+### Project Structure
+
+```
+src/
+├── config.ts          # Application configuration (env-schema + typebox)
+├── sentry.ts          # Sentry error tracking setup
+├── server.ts          # Server bootstrap and graceful shutdown
+├── index.ts           # Main app entry point (plugin/route registration)
+├── types/
+│   └── index.ts       # Shared TypeBox schemas and inferred types
+├── plugins/
+│   └── open-api/
+│       └── index.ts   # OpenAPI/Swagger plugin
+└── routes/
+    ├── index.ts       # Health check route (/up)
+    └── v1/
+        └── index.ts   # API v1 routes
+```
+
+### Application Configuration
+
+`src/config.ts` — type-safe configuration using `env-schema` and `typebox`:
 ```typescript
-// src/config.ts - Application configuration
 import { type Static, Type } from "typebox";
 import { envSchema } from "env-schema";
 
@@ -47,7 +67,8 @@ const ConfigSchema = Type.Object({
 		examples: ["dev", "production", "test"],
 	}),
 	SENTRY_DSN: Type.Optional(Type.String()),
-    TEST_URL: Type.String({ default: "https://example.local/api" }),
+	REDIS_URL: Type.String({ default: "redis://localhost:6379" }),
+	EXTERNAL_SERVICE_URL: Type.String({ default: "https://example.local/api" }),
 });
 
 const config = envSchema<Static<typeof ConfigSchema>>({
@@ -59,15 +80,22 @@ const configExport = {
 	port: config.PORT,
 	env: config.APP_ENV,
 	sentryDsn: config.SENTRY_DSN,
-    urls: {
-        testUrl: config.TEST_URL,
-    },
+	redis: {
+		url: config.REDIS_URL,
+	},
+	urls: {
+		externalService: config.EXTERNAL_SERVICE_URL,
+	},
 };
 
 export type ConfigType = typeof configExport;
 export default configExport;
+```
 
-// src/sentry.ts - Sentry integration
+### Sentry Integration
+
+`src/sentry.ts`:
+```typescript
 import { init } from "@sentry/node";
 import packageJsonFinder from "find-package-json";
 import config from "./config.js";
@@ -81,8 +109,12 @@ if (config.sentryDsn) {
 		release: packageJson?.version,
 	});
 }
+```
 
-// src/server.ts - Application server bootstrap
+### Server Bootstrap
+
+`src/server.ts` — startup with graceful shutdown via `close-with-grace`:
+```typescript
 import "./sentry.js";
 import closeWithGrace from "close-with-grace";
 import config from "./config.js";
@@ -114,8 +146,12 @@ const start = async () => {
 };
 
 start().then(() => void 0);
+```
 
-// src/index.ts - Main application entry point
+### Main Application Entry Point
+
+`src/index.ts` — plugin registration, autoload, and config decorator:
+```typescript
 import path from "node:path";
 import autoload from "@fastify/autoload";
 import fastifyRedis from "@fastify/redis";
@@ -159,28 +195,31 @@ const startServer = async (config: ConfigType): Promise<FastifyInstance> => {
 };
 
 export default startServer;
+```
 
-// src/types/index.ts - Shared TypeScript types
+### Shared TypeBox Schemas
+
+`src/types/index.ts` — define schemas once, infer TypeScript types:
+```typescript
 import { Type, Static } from "typebox";
 
-// Success schema
 export const Success = Type.Object({
-    success: Type.Boolean({ default: true }),
-    message: Type.Optional(Type.String())
+	success: Type.Boolean({ default: true }),
+	message: Type.Optional(Type.String()),
 });
 
 export const Test = Type.Object({
-	test: Type.String()
+	test: Type.String(),
 });
 
-// Type inference
 export type Success = Static<typeof Success>;
 export type Test = Static<typeof Test>;
 ```
 
 ### Plugin-Based Architecture
+
+`src/plugins/open-api/index.ts` — OpenAPI/Swagger plugin wrapped with `fastify-plugin`:
 ```typescript
-// src/plugins/open-api/index.ts - OpenApi plugin
 import fastifySwagger, { type SwaggerOptions } from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import type { FastifyInstance } from "fastify";
@@ -223,8 +262,9 @@ export default fp(openApi, {
 ```
 
 ### Type-Safe Route Handlers
+
+`src/routes/index.ts` — health check route:
 ```typescript
-// src/routes/index.ts - Default route registration
 /* c8 ignore start */
 import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import type { FastifyInstance, FastifyServerOptions } from "fastify";
@@ -243,7 +283,7 @@ export default function (
 			logLevel: "silent",
 			schema: {
 				response: {
-					200: Success
+					200: Success,
 				},
 			},
 		},
@@ -256,12 +296,15 @@ export default function (
 
 	done();
 }
+/* c8 ignore stop */
+```
 
-// src/routes/v1/index.ts - Api route registration
+`src/routes/v1/index.ts` — API route with external service call:
+```typescript
 import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import type { FastifyInstance, FastifyServerOptions } from "fastify";
-import { Success, Test } from "../types/index.js";
-import { request } from "undici";
+import { Success, Test } from "../../types/index.js";
+import { request as undiciRequest } from "undici";
 
 export default function (
 	_fastify: FastifyInstance,
@@ -273,31 +316,34 @@ export default function (
 		"/",
 		{
 			schema: {
-				tags: ["remove-me"],
-                body: Test,
+				tags: ["v1"],
+				body: Test,
 				response: {
-					200: Success
+					200: Success,
 				},
 			},
 		},
 		async (request, reply) => {
 			const test = request.body.test;
-			
-			const remoteResult = await request
-                .post(fastify.config.urls.testUrl, {
-                    body: JSON.stringify({ test }),
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                });
-			
-			if(remoteResult.statusCode !== 200) {
-                return reply.status(502).send({
-                    success: false,
-                    message: "Failed to reach remote service"
-                });
-            }
-			
+
+			const remoteResult = await undiciRequest(
+				fastify.config.urls.externalService,
+				{
+					method: "POST",
+					body: JSON.stringify({ test }),
+					headers: {
+						"Content-Type": "application/json",
+					},
+				},
+			);
+
+			if (remoteResult.statusCode !== 200) {
+				return reply.status(502).send({
+					success: false,
+					message: "Failed to reach remote service",
+				});
+			}
+
 			reply.send({
 				success: true,
 			});
@@ -306,7 +352,6 @@ export default function (
 
 	done();
 }
-
 ```
 
 ### Dockerfile Example
@@ -314,11 +359,11 @@ export default function (
 ```Dockerfile
 FROM node:22-alpine
 
-MAINTAINER "Coverzen <dev@coverzen.it>"
+LABEL maintainer="Coverzen <dev@coverzen.it>"
 WORKDIR /home/app
-COPY package*.json /home/app/
-COPY ../node_modules /home/app/node_modules
-COPY ../dist /home/app
+COPY package*.json ./
+COPY node_modules ./node_modules
+COPY dist ./
 RUN npm prune --omit dev
 CMD [ "node", "./server.js" ]
 ```
@@ -329,10 +374,10 @@ CMD [ "node", "./server.js" ]
   "scripts": {
 	"clean": "rm -rf ./dist",
 	"build": "tsc",
-	"dev": "TS_NODE_PROJECT=./tsconfig.dev.json node --watch --watch-path=./src --no-warnings=ExperimentalWarning --loader ts-node/esm src/server.ts"
+	"dev": "node --watch --watch-path=./src --import tsx src/server.ts"
   },
   "tap": {
-	"show-full-coverage": true,
+	"show-full-coverage": true
   },
   "engines": {
 	"node": ">=22.0.0"
@@ -378,4 +423,3 @@ CMD [ "node", "./server.js" ]
 - Document APIs with OpenAPI/Swagger integration
 
 Always prioritize performance, type safety, and maintainability while leveraging Fastify's strengths in speed and developer experience.
-
