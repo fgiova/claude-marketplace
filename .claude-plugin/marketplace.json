@@ -50,6 +50,17 @@
       },
       "source": "./plugins/tap-testcontainers",
       "category": "testing"
+    },
+    {
+      "name": "fastify-testing",
+      "description": "Fastify testing expertise with node-tap: unit tests, integration tests, route testing, plugin testing, and best practices",
+      "version": "0.1.0",
+      "author": {
+        "name": "Francesco Giovannini",
+        "email": "fgiova@fgiova.com"
+      },
+      "source": "./plugins/fastify-testing",
+      "category": "testing"
     }
   ]
 }
