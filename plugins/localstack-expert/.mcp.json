@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "localstack": {
+      "command": "npx",
+      "args": ["tsx", "${CLAUDE_PLUGIN_ROOT}/mcp-server/src/index.ts"],
+      "cwd": "${CLAUDE_PLUGIN_ROOT}/mcp-server",
+      "env": {
+        "AWS_ENDPOINT_URL": "http://localhost:4566",
+        "AWS_REGION": "us-east-1",
+        "AWS_ACCESS_KEY_ID": "test",
+        "AWS_SECRET_ACCESS_KEY": "test"
+      }
+    }
+  }
+}
