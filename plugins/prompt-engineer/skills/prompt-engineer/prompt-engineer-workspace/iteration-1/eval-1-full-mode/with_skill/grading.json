@@ -1,0 +1,48 @@
+{
+  "eval_id": 1,
+  "eval_name": "full-mode-status-report",
+  "variant": "with_skill",
+  "expectations": [
+    {
+      "text": "Prompt contains a clear 'I want to... so that...' task statement",
+      "passed": true,
+      "evidence": "Check 'has_task_statement' passed"
+    },
+    {
+      "text": "Final prompt is entirely in English",
+      "passed": true,
+      "evidence": "Check 'english_output' passed"
+    },
+    {
+      "text": "Prompt contains SUCCESS BRIEF with all 4 fields (output type, reaction, does not sound like, success means)",
+      "passed": true,
+      "evidence": "Check 'has_brief_section' passed"
+    },
+    {
+      "text": "Prompt contains collaborative refinement instructions (clarifying questions, execution plan)",
+      "passed": true,
+      "evidence": "Check 'has_conversation_section' passed"
+    },
+    {
+      "text": "Prompt references context files to be read before starting",
+      "passed": true,
+      "evidence": "Check 'has_context_reference' passed"
+    },
+    {
+      "text": "Prompt contains Always/Never rules extracted from the reference",
+      "passed": true,
+      "evidence": "Check 'has_reference_rules' passed"
+    },
+    {
+      "text": "Prompt does NOT contain 'act as' or 'you are a' role assignments",
+      "passed": true,
+      "evidence": "Check 'no_role_assignment' passed"
+    },
+    {
+      "text": "Prompt tells AI to read context file fully and stop if about to break rules",
+      "passed": true,
+      "evidence": "Check 'has_rules_guardrail' passed"
+    }
+  ],
+  "pass_rate": 1.0
+}

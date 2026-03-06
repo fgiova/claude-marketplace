@@ -1,0 +1,48 @@
+{
+  "eval_id": 3,
+  "eval_name": "context-creation-api-docs",
+  "variant": "without_skill",
+  "expectations": [
+    {
+      "text": "Prompt contains a clear 'I want to... so that...' task statement",
+      "passed": false,
+      "evidence": "Check 'has_task_statement' failed"
+    },
+    {
+      "text": "Final prompt is entirely in English",
+      "passed": true,
+      "evidence": "Check 'english_output' passed"
+    },
+    {
+      "text": "Prompt contains SUCCESS BRIEF with all 4 fields",
+      "passed": false,
+      "evidence": "Check 'has_brief_section' failed"
+    },
+    {
+      "text": "Prompt contains collaborative refinement instructions",
+      "passed": false,
+      "evidence": "Check 'has_conversation_section' failed"
+    },
+    {
+      "text": "Prompt references context files to be read before starting",
+      "passed": false,
+      "evidence": "Check 'has_context_reference' failed"
+    },
+    {
+      "text": "A context.md file was actually created",
+      "passed": false,
+      "evidence": "context.md not found"
+    },
+    {
+      "text": "Prompt does NOT contain 'act as' or 'you are a' role assignments",
+      "passed": false,
+      "evidence": "Check 'no_role_assignment' failed"
+    },
+    {
+      "text": "Prompt tells AI to read context file fully and stop if about to break rules",
+      "passed": false,
+      "evidence": "Check 'has_rules_guardrail' failed"
+    }
+  ],
+  "pass_rate": 0.125
+}

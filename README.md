@@ -1,4 +1,4 @@
-# FGiova Claude Marketplace
+# Fgiova Claude Marketplace
 
 A curated marketplace for Claude Code plugins and extensions.
 
@@ -18,6 +18,7 @@ This marketplace distributes high-quality Claude Code plugins that extend Claude
 - **platformatic-runtime** - Platformatic Runtime expertise: multi-service orchestration, watt.json configuration, monorepo structure, and testing strategy. Auto-activates on Platformatic-related prompts.
 - **tap-testcontainers** - Node-tap and Testcontainers integration expertise: container-based testing, test lifecycle, service orchestration, and best practices for Node.js. Auto-activates on node-tap + Testcontainers-related prompts.
 - **localstack-expert** - LocalStack Community Edition expertise: local AWS development, docker-compose setup, cdklocal/awslocal tooling, init hooks, and service configuration. Auto-activates on LocalStack-related prompts.
+- **prompt-engineer** - Structured prompt engineering: guides you through a 6-phase framework (Task, Context, Reference, Brief, Rules, Conversation) to build professional-grade, reusable prompts. Use `/prompt-engineer` or ask to "build a prompt".
 
 ## Getting Started
 

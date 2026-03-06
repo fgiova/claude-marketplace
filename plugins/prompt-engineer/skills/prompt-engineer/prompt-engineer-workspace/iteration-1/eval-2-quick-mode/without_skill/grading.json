@@ -1,0 +1,43 @@
+{
+  "eval_id": 2,
+  "eval_name": "quick-mode-cold-email",
+  "variant": "without_skill",
+  "expectations": [
+    {
+      "text": "Prompt contains a clear 'I want to... so that...' task statement",
+      "passed": false,
+      "evidence": "Check 'has_task_statement' failed"
+    },
+    {
+      "text": "Final prompt is entirely in English",
+      "passed": true,
+      "evidence": "Check 'english_output' passed"
+    },
+    {
+      "text": "Prompt contains SUCCESS BRIEF with all 4 fields",
+      "passed": false,
+      "evidence": "Check 'has_brief_section' failed"
+    },
+    {
+      "text": "Prompt contains collaborative refinement instructions",
+      "passed": false,
+      "evidence": "Check 'has_conversation_section' failed"
+    },
+    {
+      "text": "Quick mode: prompt does NOT reference context files",
+      "passed": true,
+      "evidence": "Check 'no_context_files' passed"
+    },
+    {
+      "text": "Quick mode: prompt does NOT contain reference/rules section",
+      "passed": true,
+      "evidence": "Check 'no_reference_section' passed"
+    },
+    {
+      "text": "Prompt does NOT contain 'act as' or 'you are a' role assignments",
+      "passed": true,
+      "evidence": "Check 'no_role_assignment' passed"
+    }
+  ],
+  "pass_rate": 0.5714285714285714
+}

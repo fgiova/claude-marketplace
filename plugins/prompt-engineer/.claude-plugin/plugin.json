@@ -1,0 +1,12 @@
+{
+  "name": "prompt-engineer",
+  "description": "Structured prompt engineering: guides users step-by-step through a 6-phase framework to build high-quality, reusable prompts",
+  "version": "0.1.0",
+  "author": {
+    "name": "Francesco Giovannini",
+    "email": "fgiova@fgiova.com"
+  },
+  "repository": "https://github.com/fgiova/claude-marketplace",
+  "license": "MIT",
+  "keywords": ["prompt", "prompt-engineering", "structured-prompt", "prompt-builder", "ai-prompts"]
+}
