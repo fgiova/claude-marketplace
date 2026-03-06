@@ -1,10 +1,19 @@
 ---
 name: prompt-decomposition
 description: |
-  Activate when the user asks to plan, organize, decompose, break down, or structure a complex task.
-  Trigger keywords: pianifica, pianificare, piano, plan, planning, plan this, make a plan,
-  crea un piano, scomponi, break down, decompose, organize tasks, task plan, step by step plan,
-  structured approach, multi-step, fasi, phases.
+  ALWAYS consult this skill when the user asks to plan, organize, decompose, break down, or
+  structure a complex task — or when the user provides a large, multi-step prompt that clearly
+  needs decomposition before execution. This skill contains the exact workflow for creating
+  structured execution plans with atomic tasks, dependency mapping, and parallel phases.
+  Without this skill, Claude will attempt to execute complex tasks monolithically instead of
+  decomposing them into manageable, parallelizable sub-tasks.
+  Covers: task decomposition principles (atomicity, independence, clarity, completeness),
+  dependency mapping (data, order, resource dependencies), phase organization, conflict
+  avoidance, plan file format, execution via sub-agents.
+  Trigger on ANY mention of: pianifica, pianificare, piano, plan, planning, make a plan,
+  crea un piano, scomponi, break down, decompose, organize tasks, step by step, fasi, phases,
+  troppo complesso, complex task, come organizzo, approccio strutturato, implementation plan,
+  migration plan, refactoring plan, task decomposition, parallel tasks, divide in task.
 version: 1.0.0
 ---
 

@@ -1,11 +1,19 @@
 ---
 name: platformatic-runtime
 description: |
-  Activate when working with Platformatic Runtime, composing services, configuring watt.json, or discussing Platformatic project structure and testing.
-  Trigger keywords: platformatic, platformatic runtime, plt, watt, watt.json, service composition,
-  platformatic service, platformatic node, @platformatic/node, @platformatic/service,
-  @platformatic/runtime, create() function, entrypoint, pnpm workspaces monorepo,
-  testcontainers, unit test platformatic, integration test platformatic.
+  ALWAYS consult this skill when the user works with Platformatic Runtime, watt.json, the
+  create() function pattern, inter-service communication via plt.local, or any project using
+  @platformatic/* packages. This skill contains critical patterns for multi-service composition,
+  runtime configuration, service entry points, and testing strategy that Claude cannot produce
+  correctly without consulting. Without this skill, Claude will incorrectly call app.ready()
+  inside create(), hardcode service URLs instead of using plt.local, and misconfigure watt.json
+  environment variable mapping.
+  Covers: watt.json configuration (dev and production), create() function pattern, inter-service
+  communication via plt.local, pnpm workspace monorepo structure, service configuration with
+  env-schema, unit vs integration testing strategy, common pitfalls.
+  Trigger on ANY mention of: platformatic, watt, watt.json, plt, plt.local, @platformatic/*,
+  create() function, platformatic runtime, platformatic service, platformatic node, entrypoint,
+  watt build, watt resolve, watt.production.json, service composition, multi-service runtime.
 version: 0.1.0
 ---
 

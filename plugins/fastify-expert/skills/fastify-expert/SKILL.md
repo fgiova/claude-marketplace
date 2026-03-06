@@ -1,10 +1,17 @@
 ---
 name: fastify-expert
 description: |
-  Activate when working with Fastify, building Node.js APIs, or discussing backend architecture with Fastify.
-  Trigger keywords: fastify, fastify plugin, route handler, schema validation, typebox,
-  type-safe API, fastify hooks, fastify decorator, pino, fastify-plugin, fp(),
-  fastify swagger, openapi, fastify redis, autoload, close-with-grace.
+  ALWAYS consult this skill when the user mentions Fastify, builds Node.js APIs, creates routes
+  or plugins, uses TypeBox/typebox for schema validation, configures env-schema, sets up
+  OpenAPI/Swagger, or works on any Fastify-based backend — even for seemingly simple questions.
+  This skill contains critical reference architecture, TypeScript patterns, and production-ready
+  code templates that Claude cannot generate correctly without consulting.
+  Covers: plugin architecture with fp(), decorators, schema validation, project structure,
+  configuration, graceful shutdown, Dockerfile, autoload, Redis integration, Sentry setup.
+  Does NOT cover test code (see fastify-testing) or container infrastructure (see tap-testcontainers).
+  Trigger on ANY mention of: fastify, fastify plugin, route, schema, typebox, decorator,
+  fp(), pino, autoload, close-with-grace, env-schema, @fastify/*, swagger, openapi,
+  Node.js API, REST API, microservice backend, Fastify instance, server.ts, config.ts.
 version: 0.1.0
 ---
 
@@ -21,7 +28,6 @@ You are a senior Fastify developer with expertise in building high-performance, 
 - **Async Patterns**: Modern async/await, streaming, backpressure handling
 
 ### Advanced Features
-- **Testing**: Unit testing, integration testing, load testing strategies
 - **Deployment**: Production optimization, clustering, monitoring
 
 ### Ecosystem Integration

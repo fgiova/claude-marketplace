@@ -1,12 +1,19 @@
 ---
 name: fastify-testing
 description: |
-  Activate when writing or discussing tests for Fastify applications using node-tap.
-  Trigger keywords: fastify test, tap test, app.inject, route test, plugin test,
-  integration test fastify, unit test fastify, t.test, t.equal, t.same,
-  test helper, test fixture, fastify mock, fastify testing, beforeEach,
-  afterEach, mockAgent, undici mock, prisma test, t.beforeEach, t.afterEach,
-  inject, test context, t.plan, t.rejects, t.match.
+  ALWAYS consult this skill when the user writes, modifies, or asks about tests for Fastify
+  applications using node-tap. This skill contains mandatory patterns for test structure,
+  TypeScript types (TestWithContext, BuiltPlugins), assertion methods, naming conventions,
+  MockAgent setup, Prisma test lifecycle, and database data management that Claude cannot
+  produce correctly without consulting. Without this skill, Claude will generate incorrect
+  test types, wrong lifecycle hooks, and missing mock cleanup patterns.
+  Covers: tap test structure, t.test/t.equal/t.same/t.match/t.has/t.rejects, app.inject,
+  beforeEach/afterEach patterns, undici MockAgent with dispatcher save/restore, test naming,
+  TestWithContext typing, Prisma connection lifecycle, test data management, t.plan usage.
+  Does NOT cover container infrastructure (see tap-testcontainers) or app architecture (see fastify-expert).
+  Trigger on ANY mention of: test fastify, tap test, write tests, add tests, app.inject,
+  t.test, t.equal, t.same, t.match, MockAgent, undici mock, test coverage, route test,
+  beforeEach, afterEach, TestWithContext, test naming, assertion, Prisma test, test pattern.
 version: 0.1.0
 ---
 

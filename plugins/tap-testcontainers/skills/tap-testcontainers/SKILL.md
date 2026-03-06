@@ -1,11 +1,21 @@
 ---
 name: tap-testcontainers
 description: |
-  Activate when working with node-tap tests that use Testcontainers, writing integration tests with Docker containers,
-  or discussing container-based testing strategies in Node.js.
-  Trigger keywords: node-tap, tap, testcontainers, testcontainer, integration test, container test,
-  docker test, GenericContainer, StartedTestContainer, test lifecycle, test setup, test teardown,
-  t.before, t.after, t.teardown, PostgreSqlContainer, RedisContainer, GenericContainer.
+  ALWAYS consult this skill when the user works with Testcontainers, Docker containers for
+  tests, tap before/after hooks for container lifecycle, or test environment setup with
+  test-env.json and localtest.ts. This skill contains the exact architecture for container-based
+  test infrastructure (Ryuk reaper, before.js executors, container runners, teardown.js,
+  localtest.ts environment loader) that Claude cannot reconstruct correctly without consulting.
+  Without this skill, Claude will produce incorrect container lifecycle management, miss reaper
+  label configuration, and break inter-process environment variable passing.
+  Covers: Testcontainers setup, GenericContainer, Ryuk reaper, before.js/teardown.js executors,
+  container runners (Redis, MySQL, PostgreSQL, LocalStack), test-env.json, localtest.ts,
+  TEST_LOCAL and SKIP_TEST_* environment variables, tap before/after hooks for containers.
+  Does NOT cover test code patterns (see fastify-testing) or app architecture (see fastify-expert).
+  Trigger on ANY mention of: testcontainers, testcontainer, GenericContainer, docker test,
+  container test, before.js, teardown.js, localtest.ts, test-env.json, Ryuk, reaper,
+  TEST_LOCAL, SKIP_TEST, container runner, test infrastructure, test environment setup,
+  tap before hook, tap after hook, container lifecycle.
 version: 0.1.0
 ---
 
