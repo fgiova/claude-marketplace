@@ -61,6 +61,17 @@
       },
       "source": "./plugins/fastify-testing",
       "category": "testing"
+    },
+    {
+      "name": "localstack-expert",
+      "description": "LocalStack Community Edition expertise with MCP server: local AWS development, docker-compose setup, cdklocal/awslocal tooling, init hooks, and 40 MCP tools for S3/SQS/SNS/Lambda/DynamoDB",
+      "version": "0.1.0",
+      "author": {
+        "name": "Francesco Giovannini",
+        "email": "fgiova@fgiova.com"
+      },
+      "source": "./plugins/localstack-expert",
+      "category": "development"
     }
   ]
 }

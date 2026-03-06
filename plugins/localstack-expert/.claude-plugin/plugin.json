@@ -1,0 +1,12 @@
+{
+  "name": "localstack-expert",
+  "description": "LocalStack Community Edition expertise: local AWS development, docker-compose setup, cdklocal/awslocal tooling, init hooks, and service configuration",
+  "version": "0.1.0",
+  "author": {
+    "name": "Francesco Giovannini",
+    "email": "fgiova@fgiova.com"
+  },
+  "repository": "https://github.com/fgiova/claude-marketplace",
+  "license": "MIT",
+  "keywords": ["localstack", "aws", "docker", "cdklocal", "awslocal", "s3", "sqs", "lambda", "dynamodb", "local-development", "testing", "mcp", "mcp-server", "sns"]
+}

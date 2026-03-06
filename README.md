@@ -17,6 +17,7 @@ This marketplace distributes high-quality Claude Code plugins that extend Claude
 - **fastify-expert** - Senior Fastify developer expertise: type-safe APIs, plugin architecture, schema validation, and production patterns. Auto-activates on Fastify-related prompts.
 - **platformatic-runtime** - Platformatic Runtime expertise: multi-service orchestration, watt.json configuration, monorepo structure, and testing strategy. Auto-activates on Platformatic-related prompts.
 - **tap-testcontainers** - Node-tap and Testcontainers integration expertise: container-based testing, test lifecycle, service orchestration, and best practices for Node.js. Auto-activates on node-tap + Testcontainers-related prompts.
+- **localstack-expert** - LocalStack Community Edition expertise: local AWS development, docker-compose setup, cdklocal/awslocal tooling, init hooks, and service configuration. Auto-activates on LocalStack-related prompts.
 
 ## Getting Started
 

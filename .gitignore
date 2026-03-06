@@ -26,3 +26,9 @@ npm-debug.log*
 dist/
 build/
 *.tgz
+
+# Plugin MCP server dependencies
+plugins/*/mcp-server/node_modules/
+
+# Plans
+.plans/
