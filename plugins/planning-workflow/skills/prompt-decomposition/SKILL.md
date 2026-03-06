@@ -3,18 +3,22 @@ name: prompt-decomposition
 description: |
   ALWAYS consult this skill when the user asks to plan, organize, decompose, break down, or
   structure a complex task — or when the user provides a large, multi-step prompt that clearly
-  needs decomposition before execution. This skill contains the exact workflow for creating
-  structured execution plans with atomic tasks, dependency mapping, and parallel phases.
+  needs decomposition before execution. Also activate when the user wants to resume, continue,
+  or review an existing plan from a previous session. This skill contains the exact workflow
+  for creating structured execution plans with atomic tasks, dependency mapping, and parallel
+  phases, with full persistence and cross-session resume support.
   Without this skill, Claude will attempt to execute complex tasks monolithically instead of
   decomposing them into manageable, parallelizable sub-tasks.
   Covers: task decomposition principles (atomicity, independence, clarity, completeness),
   dependency mapping (data, order, resource dependencies), phase organization, conflict
-  avoidance, plan file format, execution via sub-agents.
+  avoidance, plan file format, execution via sub-agents, plan persistence and resume.
   Trigger on ANY mention of: pianifica, pianificare, piano, plan, planning, make a plan,
   crea un piano, scomponi, break down, decompose, organize tasks, step by step, fasi, phases,
   troppo complesso, complex task, come organizzo, approccio strutturato, implementation plan,
-  migration plan, refactoring plan, task decomposition, parallel tasks, divide in task.
-version: 1.0.0
+  migration plan, refactoring plan, task decomposition, parallel tasks, divide in task,
+  riprendi piano, resume plan, continua piano, riprendi pianificazione, continue planning,
+  sospendi piano, suspend plan, riprendi, resume.
+version: 1.1.0
 ---
 
 # Prompt Decomposition
@@ -25,6 +29,21 @@ actually execute the workflow.
 
 ## Activation Behavior
 
+### Resume Check (ALWAYS do this first)
+
+When this skill activates, **before doing anything else**, check if there are existing plans
+that can be resumed:
+
+1. Use Glob to check for `.plans/*/plan.md` files
+2. Read the frontmatter of each `plan.md` found
+3. If any plan has `status: draft`, `status: reviewing`, or `status: suspended`:
+   - Present the list of resumable plans to the user with their title, status, and creation date
+   - Ask: "Vuoi riprendere uno di questi piani o crearne uno nuovo?"
+   - If the user chooses to resume, load the plan and jump to **step 6** (review iteration)
+   - If the user chooses to create a new plan, proceed with step 1 below
+
+### New Plan Creation
+
 When the user asks to plan something (e.g. "pianifica questo", "make a plan for...", "break this down into tasks"),
 follow the **exact same procedure** as the `/planning-workflow:plan` command:
 
@@ -32,15 +51,40 @@ follow the **exact same procedure** as the `/planning-workflow:plan` command:
 2. **Analyze the prompt**: understand full scope, read referenced files if any
 3. **Identify atomic tasks**: break into smallest independently executable units
 4. **Map dependencies**: determine task ordering and parallel groups
-5. **Propose the plan**: present structured plan with phases and tasks
-6. **Ask for confirmation**: let the user approve, modify, or iterate
-7. **Save the plan**: write `plan.md` index + individual task files in `.plans/<timestamp>-<slug>/tasks/`
+5. **Save the plan as draft**: write `plan.md` (with `status: draft`) and individual task files
+   in `.plans/<timestamp>-<slug>/tasks/` **BEFORE presenting it to the user**.
+   This ensures the plan is persisted even if the session is interrupted.
+6. **Propose the plan**: present the structured plan with phases and tasks to the user.
+   Update `plan.md` status to `reviewing`.
+7. **Iterate with the user**: the user can:
+   - **Approve** the plan → update `status: approved`, proceed to step 8
+   - **Request modifications** → apply changes, update files on disk, keep `status: reviewing`
+   - **Suspend** the discussion (e.g. "sospendi", "ci penso", "riprendiamo dopo") →
+     update `status: suspended`, inform the user the plan is saved and can be resumed
+     in a future session by asking to "riprendi il piano" or "resume plan"
+   - At **every iteration**, update `plan.md` and task files on disk immediately
 8. **Ask to execute**: offer immediate execution or defer to `/planning-workflow:task-exec`
 9. **If executing**: run tasks in parallel phases via Task tool, update plan.md after every task
 10. **Final summary**: present results, ask whether to delete or keep planning files
 
 Refer to the `/planning-workflow:plan` command for the full specification of each step,
 including file formats, frontmatter schemas, and execution rules.
+
+### Plan Status Lifecycle
+
+Plans follow this status lifecycle in the `plan.md` frontmatter:
+
+```
+draft → reviewing → approved → executing → completed
+                  ↘ suspended ↗
+```
+
+- **`draft`**: plan just generated and saved, not yet shown to user
+- **`reviewing`**: plan presented to user, iteration in progress
+- **`suspended`**: user explicitly paused the review (resumable cross-session)
+- **`approved`**: user confirmed the plan, ready for execution
+- **`executing`**: tasks are being run
+- **`completed`**: all tasks finished (or `partial` if some failed)
 
 ---
 

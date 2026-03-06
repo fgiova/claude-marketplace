@@ -16,6 +16,20 @@ The user's complex prompt/task: `$ARGUMENTS`
 
 Follow these steps precisely:
 
+#### Resume Check (ALWAYS do this first)
+
+Before creating a new plan, check for existing resumable plans:
+
+1. Use Glob to check for `.plans/*/plan.md` files
+2. Read the frontmatter of each `plan.md` found
+3. If any plan has `status: draft`, `status: reviewing`, or `status: suspended`:
+   - Present the list of resumable plans to the user with their title, status, and creation date
+   - Ask: "Vuoi riprendere uno di questi piani o crearne uno nuovo?"
+   - If the user chooses to resume, load the plan and jump to **step 6** (plan review iteration)
+   - If the user chooses to create a new plan, proceed with step 1 below
+
+#### New Plan Creation
+
 1. **Bootstrap `.plans/` directory**:
 
    a. **Check `.gitignore`**: Use Grep to check if a `.gitignore` file exists in the project root and whether it already contains `.plans` or `.plans/`. If `.gitignore` exists but `.plans/` is NOT listed, append `.plans/` to it using Edit. If `.gitignore` does not exist, create it with Write containing only `.plans/`.
@@ -33,42 +47,17 @@ Follow these steps precisely:
 
 4. **Map dependencies**: Determine which tasks depend on others. Tasks without dependencies can run in parallel.
 
-5. **Propose the plan**: Present the plan to the user in this format:
-
-   ```
-   ## Plan: <title>
-
-   ### Phase 1 (parallel)
-   - [ ] Task 1.1: <description>
-   - [ ] Task 1.2: <description>
-
-   ### Phase 2 (depends on Phase 1)
-   - [ ] Task 2.1: <description>
-
-   ### Phase 3 (parallel, depends on Phase 2)
-   - [ ] Task 3.1: <description>
-   - [ ] Task 3.2: <description>
-   ```
-
-6. **Ask for confirmation**: Use AskUserQuestion to ask the user if they want to:
-   - Approve the plan as-is
-   - Modify specific tasks
-   - Add/remove tasks
-   - Change task ordering or dependencies
-
-7. **Iterate** until the user approves.
-
-8. **Save the plan**: Once approved, create the plan directory and files:
+5. **Save the plan as draft**: Create the plan directory and files **BEFORE presenting to the user**:
 
    a. **Create the plan directory**: `.plans/<timestamp>-<slug>/` (e.g. `.plans/2025-01-15-refactor-auth/`)
 
-   b. **Save the plan index**: `.plans/<timestamp>-<slug>/plan.md` with metadata and task references:
+   b. **Save the plan index**: `.plans/<timestamp>-<slug>/plan.md` with `status: draft`:
 
    ```markdown
    ---
    title: <plan title>
    created: <ISO timestamp>
-   status: approved
+   status: draft
    total-tasks: <N>
    phases: <N>
    completed-tasks: 0
@@ -122,11 +111,41 @@ Follow these steps precisely:
 
    d. **Use `mkdir -p`** to create the `tasks/` subdirectory before writing task files.
 
-9. **Ask to execute**: After saving the plan, use AskUserQuestion to ask:
+6. **Propose the plan**: Present the plan to the user and update `plan.md` status to `reviewing`:
+
+   ```
+   ## Plan: <title>
+
+   ### Phase 1 (parallel)
+   - [ ] Task 1.1: <description>
+   - [ ] Task 1.2: <description>
+
+   ### Phase 2 (depends on Phase 1)
+   - [ ] Task 2.1: <description>
+
+   ### Phase 3 (parallel, depends on Phase 2)
+   - [ ] Task 3.1: <description>
+   - [ ] Task 3.2: <description>
+   ```
+
+7. **Iterate with the user**: Use AskUserQuestion to ask the user if they want to:
+   - **Approve** the plan as-is → update `status: approved`, proceed to step 8
+   - **Modify** specific tasks → apply changes, **update files on disk immediately**, keep `status: reviewing`
+   - **Add/remove** tasks → apply changes, **update files on disk immediately**
+   - **Change** task ordering or dependencies → apply changes, **update files on disk immediately**
+   - **Suspend** the review (e.g. "sospendi", "ci penso", "riprendiamo dopo") → update `status: suspended`,
+     inform the user the plan is saved at `<plan-dir>/` and can be resumed in a future session
+
+   **CRITICAL**: At every iteration, update `plan.md` and task files on disk immediately.
+   This ensures the plan state is always persisted and recoverable.
+
+   Iterate until the user approves or suspends.
+
+8. **Ask to execute**: After approval, use AskUserQuestion to ask:
    - "Vuoi eseguire i task del piano adesso?"
    - Options: **Esegui ora** / **Non eseguire**
 
-10. **If the user chooses to execute**, proceed with the full execution flow:
+9. **If the user chooses to execute**, proceed with the full execution flow:
 
    a. **Discover task files**: Use Glob to find all task files (`<plan-dir>/tasks/task-*.md`). Read each to load metadata (id, phase, status, agent, dependencies).
 
@@ -168,17 +187,36 @@ Follow these steps precisely:
 
    i. **If the user chooses to keep**: Inform the user the files are at `<plan-dir>/` for reference.
 
-11. **If the user chooses not to execute**, inform them they can run it later with:
+10. **If the user chooses not to execute**, inform them they can run it later with:
     ```
     /planning-workflow:task-exec <plan-directory-path>
     ```
 
+### Plan Status Lifecycle
+
+Plans follow this status lifecycle in the `plan.md` frontmatter:
+
+```
+draft → reviewing → approved → executing → completed
+                  ↘ suspended ↗
+```
+
+- **`draft`**: plan generated and saved to disk, not yet shown to user
+- **`reviewing`**: plan presented to user, iteration in progress
+- **`suspended`**: user paused the review (resumable in any future session)
+- **`approved`**: user confirmed the plan, ready for execution
+- **`executing`**: tasks are being run (set via `in-progress` in frontmatter)
+- **`completed`**: all tasks finished (or `partial` if some failed)
+
 ### Rules
-- During planning (steps 1-8): never execute tasks, only plan
-- During execution (step 10): follow the same rules as `/planning-workflow:task-exec`
+- **Save before presenting**: always persist the plan to disk BEFORE showing it to the user
+- **Update on every change**: every modification during review must be written to disk immediately
+- During planning (steps 1-7): never execute tasks, only plan
+- During execution (step 9): follow the same rules as `/planning-workflow:task-exec`
 - Each task must specify which agent type is best suited (general-purpose for code/research, Bash for commands)
 - Group independent tasks into phases for parallel execution
 - Be specific: vague tasks lead to poor execution
 - Each task MUST be written to its own file - never inline task details in the plan index
 - **Update `plan.md` after EVERY single task completion** - not just at the end of a phase
 - The plan index (`plan.md`) must always reflect the real-time state of execution
+- When resuming a suspended plan, re-read all task files to rebuild the full context
