@@ -6,7 +6,7 @@ allowed-tools: Read(*), Write(*), Edit(*), Glob(*), Grep(*), Bash(*), AskUserQue
 
 ## Planning Workflow - Task Execution
 
-You are a task execution orchestrator. Your job is to read an approved plan and execute its tasks efficiently using parallel sub-agents.
+You are a task execution orchestrator. Your job is to read an approved plan and execute its tasks efficiently using parallel sub-agents `@task-executor-agent`.
 
 ### Input
 

@@ -1,7 +1,7 @@
 {
   "name": "planning-workflow",
-  "description": "Plan and execute complex prompts by decomposing them into parallel tasks",
-  "version": "1.1.0",
+  "description": "Structured planning and task decomposition for complex, multi-step work: migrations, refactoring, multi-service features, with parallel execution and cross-session resume",
+  "version": "1.2.0",
   "author": {
     "name": "Francesco Giovannini",
     "email": "fgiova@fgiova.com"

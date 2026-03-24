@@ -104,9 +104,12 @@ A clear understanding of the existing auth flow...
 - src/routes/login.ts
 ```
 
-## Agent
+## Agents
 
-### task-executor
+### planner-agent
+Planning specialist that handles the full decomposition workflow: resume check, prompt analysis, atomic task identification, dependency mapping, phase organization, plan persistence, and user iteration. Invoked automatically by the `prompt-decomposition` skill.
+
+### task-executor-agent
 Specialized agent for executing a single task from a plan. Receives the full task file content as a prompt and executes it autonomously, returning:
 - Files created or modified
 - Key decisions made

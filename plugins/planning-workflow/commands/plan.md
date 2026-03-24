@@ -10,7 +10,7 @@ You are a planning assistant. Your job is to decompose a complex prompt into a s
 
 ### Input
 
-The user's complex prompt/task: `$ARGUMENTS`
+Invoke the @planner-agent subagent for user's complex prompt/task: `$ARGUMENTS`
 
 ### Process
 

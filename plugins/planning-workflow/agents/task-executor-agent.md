@@ -1,5 +1,5 @@
 ---
-name: task-executor
+name: task-executor-agent
 description: |
   Use this agent to execute a single task from a structured plan.
   It receives a task description with context and executes it autonomously,
@@ -17,7 +17,7 @@ description: |
   assistant: "Let me dispatch the task-executor agent for this analysis."
   </example>
 
-model: inherit
+model: sonnet
 color: cyan
 tools: ["Read", "Write", "Edit", "Glob", "Grep", "Bash"]
 ---
