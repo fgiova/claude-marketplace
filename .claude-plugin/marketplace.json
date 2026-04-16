@@ -11,7 +11,7 @@
     {
       "name": "planning-workflow",
       "description": "Structured planning and task decomposition for complex, multi-step work: migrations, refactoring, multi-service features, with parallel execution and cross-session resume",
-      "version": "1.2.0",
+      "version": "1.3.0",
       "author": {
         "name": "Francesco Giovannini",
         "email": "fgiova@fgiova.com"
@@ -82,7 +82,7 @@
     {
       "name": "prompt-engineer",
       "description": "Structured prompt engineering: guides users step-by-step through a 6-phase framework to build high-quality, reusable prompts",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "author": {
         "name": "Francesco Giovannini",
         "email": "fgiova@fgiova.com"

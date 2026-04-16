@@ -16,20 +16,20 @@ agent: planner-agent
 
 # Prompt Decomposition
 
-Skill orchestrate structured task decomposition. Delegate planning workflow to `@planner-agent`.
+This skill orchestrates structured task decomposition by delegating the planning workflow to the `@planner-agent`.
 
 ## When This Skill Activates
 
-Activate when user want:
-- Plan complex feature, migration, refactoring
-- Break big task into atomic, parallelizable sub-tasks
-- Make structured execution plan with phases + dependencies
-- Resume or review existing plan from past session
-- Suspend plan in progress for later
+This skill activates when the user wants to:
+- Plan a complex feature, migration, or refactoring
+- Break down a large task into atomic, parallelizable sub-tasks
+- Create a structured execution plan with phases and dependencies
+- Resume or review an existing plan from a previous session
+- Suspend a plan in progress for later continuation
 
 ## Execution
 
-On activate, **immediately delegate to `@planner-agent`** via Agent tool. Agent run full planning workflow autonomous:
+When activated, **immediately delegate to the `@planner-agent`** using the Agent tool. The agent handles the full planning workflow autonomously:
 
 1. **Resume Check** — Look for existing `.plans/*/plan.md` files to resume
 2. **Analyze** — Understand scope, read referenced files
@@ -41,17 +41,17 @@ On activate, **immediately delegate to `@planner-agent`** via Agent tool. Agent 
 
 ### How to Delegate
 
-Use Agent tool with `@planner-agent`. Pass user request as prompt. Include context user gave:
+Use the Agent tool with `@planner-agent` and pass the user's request as the prompt. Include any relevant context the user has already provided:
 
-- User named project/goal → include
-- User referenced files/codebase areas → mention
-- User want resume plan → pass along
+- If the user specified a project or goal, include it
+- If the user referenced files or codebase areas, mention them
+- If the user wants to resume a plan, pass that along
 
 **Example delegation prompt:**
 > "The user wants to plan [topic]. They mentioned [any context]. Follow the full planning workflow."
 
 ### What NOT to Do
 
-- No run planning workflow yourself — agent do
-- No ask prelim questions before delegate — agent handle interaction
-- No post-process agent output — agent manage plan lifecycle direct with user
+- Do NOT execute the planning workflow yourself — the agent handles it
+- Do NOT ask preliminary questions before delegating — the agent will handle the interaction
+- Do NOT post-process the agent's output — it manages the plan lifecycle directly with the user
