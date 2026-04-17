@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "fgiova-claude-marketplace",
   "description": "Directory of Claude Code plugins and extensions",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "owner": {
     "name": "Francesco Giovannini",
     "email": "fgiova@fgiova.com"
