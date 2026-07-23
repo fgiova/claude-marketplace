@@ -52,6 +52,16 @@ Executes tasks from a previously saved plan.
 - Presents a detailed final summary with per-task results and files modified
 - Asks whether to delete or keep the planning files
 
+### `/planning-workflow:adversarial-review [branch]`
+
+Adversarial code review: findings must survive a refutation and a judgment before they reach you.
+
+- **Target**: no argument → working + staged changes (`git diff HEAD`, allowed on any branch). A branch argument → that branch's commits vs the base (`main`/`master`). Refuses branch mode when it resolves to `main`/`master`.
+- **Find** (parallel): five `reviewer-agent` sub-agents, one per dimension — `correctness`, `security`, `performance`, `design`, `tests`.
+- **Refute** (parallel): one agent per finding tries to demolish it (false positive, already handled, out of scope, unreachable).
+- **Judge** (parallel): one agent per finding+refutation returns `confirmed` / `rejected` / `uncertain`. Only confirmed findings reach the report; uncertain are flagged separately and never auto-fixed.
+- **Fix**: selective, opt-in. You pick which confirmed findings to fix, can **challenge** any of them before execution (re-judged with your counter-argument), then fixes are applied by `task-executor-agent`.
+
 ## Plan File Structure
 
 ### Plan index (`plan.md`)
@@ -116,7 +126,22 @@ Specialized agent for executing a single task from a plan. Receives the full tas
 - Issues encountered
 - Verification results
 
-## Skill
+### reviewer-agent
+Adversarial code reviewer used by `/planning-workflow:adversarial-review`. Analysis-only (never modifies files). Plays exactly one role per invocation — `finder`, `refuter`, or `judge` — selected by the `ROLE:` field in its prompt, and returns a structured result grounded in `file:line` references.
+
+### documenter-agent
+Technical documentation writer used by the `code-implementation` skill. Surveys the implemented code, decides a topic breakdown, and writes English documentation: a `README.md` in the project root and topic-split files under `docs/`. Merges into an existing README instead of clobbering it.
+
+## Skills
+
+### code-implementation
+End-to-end code delivery pipeline. Auto-activates when you ask to **implement/build/develop** something (e.g. "implementa", "build this feature", "sviluppa") rather than just plan it. Runs four phases in sequence:
+1. **Plan & Execute** — decompose and run the tasks (via `planner-agent`)
+2. **Adversarial Review** — find → refute → judge over the produced code (via `reviewer-agent`), applying approved fixes
+3. **Documentation** — `README.md` + topic-split `docs/`, in English (via `documenter-agent`)
+4. **Wrap up** — final summary and optional `.plans/` cleanup
+
+For planning only (no build), use `prompt-decomposition` instead.
 
 ### prompt-decomposition
 This skill **auto-activates** when your prompt contains planning-related keywords (e.g. "pianifica", "plan this", "break down", "scomponi", "structured approach", "step by step plan"). When triggered, it automatically runs the full planning workflow — no need to invoke `/planning-workflow:plan` explicitly.

@@ -15,7 +15,7 @@ This marketplace distributes high-quality Claude Code plugins that extend Claude
 
 ### Stable
 
-- [**planning-workflow**](plugins/planning-workflow/README.md) - Plan and execute complex prompts with parallel task decomposition. Auto-activates when you ask to plan, decompose, or structure a task.
+- [**planning-workflow**](plugins/planning-workflow/README.md) - Plan and execute complex prompts with parallel task decomposition. Auto-activates when you ask to plan, decompose, or structure a task. Also ships `/planning-workflow:adversarial-review` for find-refute-judge code review, and a `code-implementation` skill that delivers code end-to-end (plan → build → review → document).
 - [**prompt-engineer**](plugins/prompt-engineer/README.md) - Structured prompt engineering: guides you through a 6-phase framework (Task, Context, Reference, Brief, Rules, Conversation) to build professional-grade, reusable prompts. Use `/prompt-engineer` or ask to "build a prompt".
 
 ### Experimental
